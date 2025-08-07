@@ -11,6 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { useToast } from '@/hooks/use-toast';
 import { PatientTask, StudentRanking } from '@/types';
+import { Link } from "react-router-dom";
 
 // Mock data
 const mockStudents = [
@@ -358,7 +359,12 @@ const AdminDashboard = () => {
             </Card>
           </TabsContent>
         </Tabs>
+
+        <Button asChild type="button" className="w-full mt-8 ">
+            <Link to="/adminanal">Admin Analytics</Link>
+          </Button>
       </div>
+          
     </div>
   );
 };

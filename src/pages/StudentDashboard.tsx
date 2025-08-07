@@ -11,6 +11,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { PatientTask } from "@/types";
+import { Link } from "react-router-dom";
 
 // Mock data for student tasks
 const mockStudentTasks: PatientTask[] = [
@@ -261,6 +262,12 @@ const StudentDashboard = () => {
           </Card>
         </div>
 
+
+
+        <Button asChild type="button" className="w-full mt-8 mb-8">
+            <Link to="/studanal">Student Analytics</Link>
+          </Button>
+
         {/* Tasks Grid */}
         <div className="space-y-4">
           <h2 className="text-2xl font-bold">My Tasks</h2>
@@ -395,6 +402,8 @@ const StudentDashboard = () => {
             ))}
           </div>
         </div>
+
+        
       </div>
     </div>
   );
