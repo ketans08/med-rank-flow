@@ -360,9 +360,12 @@ const AdminDashboard = () => {
           </TabsContent>
         </Tabs>
 
-        <Button asChild type="button" className="w-full mt-8 ">
-            <Link to="/adminanal">Admin Analytics</Link>
-          </Button>
+        <Button asChild type="button" className="w-full mt-8">
+  <a href="/adminanal" target="_blank" rel="noopener noreferrer">
+    Admin Analytics
+  </a>
+</Button>
+
       </div>
           
     </div>

@@ -264,9 +264,11 @@ const StudentDashboard = () => {
 
 
 
-        <Button asChild type="button" className="w-full mt-8 mb-8">
-            <Link to="/studanal">Student Analytics</Link>
-          </Button>
+        <Button asChild type="button" className="w-full mt-8">
+  <a href="/studanal" target="_blank" rel="noopener noreferrer">
+    Student Analytics
+  </a>
+</Button>
 
         {/* Tasks Grid */}
         <div className="space-y-4">
