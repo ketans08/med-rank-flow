@@ -15,6 +15,11 @@ const badgeVariants = cva(
         destructive:
           "border-transparent bg-destructive text-destructive-foreground hover:bg-destructive/80",
         outline: "text-foreground",
+        pending: "border-transparent bg-status-pending text-white",
+        accepted: "border-transparent bg-status-accepted text-white",
+        completed: "border-transparent bg-status-completed text-white",
+        rejected: "border-transparent bg-status-rejected text-white",
+        rank: "border-transparent bg-medical-blue text-white font-bold",
       },
     },
     defaultVariants: {

@@ -52,6 +52,19 @@ export default {
 					DEFAULT: 'hsl(var(--card))',
 					foreground: 'hsl(var(--card-foreground))'
 				},
+				medical: {
+					blue: 'hsl(var(--medical-blue))',
+					'blue-light': 'hsl(var(--medical-blue-light))',
+					green: 'hsl(var(--medical-green))',
+					orange: 'hsl(var(--medical-orange))',
+					red: 'hsl(var(--medical-red))'
+				},
+				status: {
+					pending: 'hsl(var(--status-pending))',
+					accepted: 'hsl(var(--status-accepted))',
+					completed: 'hsl(var(--status-completed))',
+					rejected: 'hsl(var(--status-rejected))'
+				},
 				sidebar: {
 					DEFAULT: 'hsl(var(--sidebar-background))',
 					foreground: 'hsl(var(--sidebar-foreground))',
