@@ -7,6 +7,8 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import Login from "./pages/Login";
 import Dashboard from "./components/Dashboard";
 import NotFound from "./pages/NotFound";
+import StudAnal from "./pages/studAnal";
+import AdminAnal from "./pages/adminAnal";
 
 const queryClient = new QueryClient();
 
@@ -34,6 +36,19 @@ const App = () => (
                 <Login />
               </PublicRoute>
             } />
+
+<Route path="/studanal" element={
+              <PublicRoute>
+                <StudAnal />
+              </PublicRoute>
+            } />
+
+            <Route path="/adminanal" element={
+              <PublicRoute>
+                <AdminAnal />
+              </PublicRoute>
+            } />
+
             <Route path="/dashboard" element={
               <ProtectedRoute>
                 <Dashboard />
