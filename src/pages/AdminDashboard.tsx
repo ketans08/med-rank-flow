@@ -130,7 +130,7 @@ const AdminDashboard = () => {
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 mx-auto rounded-full  from-primary to-accent flex items-center justify-center mb-2">
-            <img className=" text-white h-full w-full"  src="public\lg1.png" />
+            <img className=" text-white h-full w-full"  src=".\lg1.png" />
               
           </div>
             <div>
