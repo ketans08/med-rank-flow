@@ -1,5 +1,7 @@
 # ⚡ Quick Start - Ready to Run!
 
+> 📖 **For detailed step-by-step instructions, see [LOCALHOST_SETUP.md](./LOCALHOST_SETUP.md)**
+
 All environment files are configured for **localhost development**. You're ready to start!
 
 ## 🎯 One-Command Start (Recommended)
