@@ -53,31 +53,30 @@ npm run dev
 
 All `.env` files are **already created** and configured for localhost:
 
-- ✅ `backend/.env` - MongoDB: `mongodb://localhost:27017/med_rank_flow`
+- ✅ `backend/.env` - MongoDB Atlas URL (your cloud database) ✅
 - ✅ `med-rank-flow-admin/.env` - API: `http://localhost:8000`
 - ✅ `med-rank-flow-student/.env` - API: `http://localhost:8000`
 
+**Note:** MongoDB Atlas URL is already in `backend/.env` - no local MongoDB needed!
+
 ## 🔧 Before First Run
 
-### 1. Start MongoDB
+### 1. Verify MongoDB Atlas Configuration
 
-**Local MongoDB:**
+**You're using MongoDB Atlas (cloud) - no local setup needed!**
+
 ```bash
-# Linux
-sudo systemctl start mongod
+# Check your MongoDB Atlas URL is configured
+cd backend
+cat .env | grep MONGODB_URL
 
-# Mac
-brew services start mongodb-community
-
-# Or run directly
-mongod
+# Should show: mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
 ```
 
-**MongoDB Atlas:**
-- Update `backend/.env`:
-```
-MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
-```
+**Make sure:**
+- ✅ Your Atlas cluster is running (not paused)
+- ✅ IP whitelist includes `0.0.0.0/0` (allow all IPs for development)
+- ✅ Connection string in `.env` is correct
 
 ### 2. Seed Initial Users (First Time Only)
 
@@ -89,7 +88,8 @@ python -m utils.seed
 
 This creates:
 - **Admin**: `admin@institute.edu` / `admin123`
-- **Students**: `john@student.edu`, `emma@student.edu`, `mike@student.edu` / `student123`
+- **20-25 Random Students**: `student01@student.edu` to `student25@student.edu` / `student123`
+- **Random tasks** with random marks (3.0-5.0) for each student
 
 ## 🌐 Access Applications
 
@@ -103,7 +103,7 @@ Once all services are running:
   - Login: `admin@institute.edu` / `admin123`
 
 - **Student Portal**: http://localhost:5174
-  - Login: `john@student.edu` / `student123`
+  - Login: `student01@student.edu` / `student123` (or any student02-25)
 
 ## 🔍 Verify Setup
 
@@ -125,9 +125,10 @@ python3 verify_setup.py
 ## 🚨 Troubleshooting
 
 ### Backend won't start
-- ✅ Check MongoDB is running: `mongosh` or `mongo`
-- ✅ Verify `backend/.env` exists
+- ✅ Check MongoDB Atlas URL in `backend/.env` is correct
+- ✅ Verify Atlas cluster is running (not paused)
 - ✅ Install dependencies: `pip install -r requirements.txt`
+- ✅ Check IP whitelist in Atlas dashboard includes `0.0.0.0/0`
 
 ### Frontend can't connect
 - ✅ Verify backend is running on port 8000
@@ -135,13 +136,14 @@ python3 verify_setup.py
 - ✅ Check browser console for CORS errors
 
 ### MongoDB connection error
-- ✅ Verify MongoDB is running
-- ✅ Check `MONGODB_URL` in `backend/.env`
-- ✅ For Atlas: Check IP whitelist and credentials
+- ✅ Verify MongoDB Atlas URL in `backend/.env` is correct
+- ✅ Check Atlas cluster is running (not paused)
+- ✅ Verify IP whitelist includes `0.0.0.0/0` in Atlas Network Access
+- ✅ Check database user credentials are correct
 
 ## 🎉 You're All Set!
 
-Everything is configured and ready to run. Just start MongoDB and run the startup scripts!
+Everything is configured and ready to run. Your MongoDB Atlas is already configured - just run the startup scripts!
 
-For production deployment, see `DEPLOYMENT.md` and update `.env` files with production values.
+**No local MongoDB installation needed** - you're using cloud Atlas! ☁️
 

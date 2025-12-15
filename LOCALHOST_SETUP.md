@@ -15,64 +15,34 @@ node --version
 
 # Check npm version
 npm --version
-
-# Check MongoDB (if using local)
-mongosh --version
-# OR
-mongo --version
 ```
 
 If any are missing, install them first.
 
 ---
 
-## Step 1: Start MongoDB
+## Step 1: Configure MongoDB Atlas
 
-### Option A: Local MongoDB
+**You're using MongoDB Atlas (cloud) - great choice!**
 
-**Linux:**
-```bash
-# Start MongoDB service
-sudo systemctl start mongod
-
-# Verify it's running
-sudo systemctl status mongod
-
-# Test connection
-mongosh
-# Type: exit (to leave)
-```
-
-**macOS:**
-```bash
-# Start MongoDB
-brew services start mongodb-community
-
-# Or run directly
-mongod
-
-# Test connection (in new terminal)
-mongosh
-```
-
-**Windows:**
-```bash
-# Start MongoDB service from Services panel
-# OR run:
-"C:\Program Files\MongoDB\Server\6.0\bin\mongod.exe"
-```
-
-### Option B: MongoDB Atlas (Cloud - Easier)
-
-1. Go to https://www.mongodb.com/cloud/atlas
-2. Sign up for free account
-3. Create a free cluster
-4. Click "Connect" → "Connect your application"
-5. Copy the connection string
-6. Update `backend/.env`:
+1. Make sure you have your MongoDB Atlas connection string ready
+2. It should look like:
    ```
-   MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
+   mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
    ```
+3. Verify your `backend/.env` file has the correct URL:
+   ```bash
+   cd backend
+   cat .env | grep MONGODB_URL
+   ```
+4. Should show your Atlas connection string
+
+**Important:** Make sure your Atlas cluster:
+- ✅ Is running (not paused)
+- ✅ Has IP whitelist set to `0.0.0.0/0` (allow all IPs) for development
+- ✅ Database user has read/write permissions
+
+**Note:** No need to install or start local MongoDB - you're using cloud!
 
 ---
 
@@ -107,12 +77,14 @@ pip install -r requirements.txt
 # - Password hashing
 # - And other dependencies
 
-# Verify .env file exists
+# Verify .env file exists and has MongoDB Atlas URL
 ls -la .env
-# Should show: .env file
+cat .env | grep MONGODB_URL
+# Should show your MongoDB Atlas connection string
 
 # If .env doesn't exist, copy from example:
-cp .env.example .env
+# cp .env.example .env
+# Then edit .env and add your MongoDB Atlas URL
 
 # Seed initial data (creates admin + 20-25 students with random tasks)
 python -m utils.seed
@@ -256,7 +228,7 @@ Open browser: http://localhost:5174
 - **8000** - Backend API
 - **5173** - Admin App
 - **5174** - Student App
-- **27017** - MongoDB (default)
+- **MongoDB** - Cloud Atlas (no local port needed)
 
 ### Login Credentials:
 
@@ -290,15 +262,16 @@ pip install -r requirements.txt
 
 **Error: MongoDB connection failed**
 ```bash
-# Check MongoDB is running
-sudo systemctl status mongod  # Linux
-brew services list | grep mongodb  # Mac
-
-# Test connection
-mongosh
-
-# Check .env file has correct MONGODB_URL
+# Check .env file has correct MongoDB Atlas URL
 cat backend/.env | grep MONGODB_URL
+
+# Should show: mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
+
+# Common issues:
+# 1. Wrong password in connection string
+# 2. Cluster is paused (go to Atlas dashboard and resume)
+# 3. IP not whitelisted (add 0.0.0.0/0 in Atlas Network Access)
+# 4. Database name mismatch (should be med_rank_flow)
 ```
 
 **Error: Port 8000 already in use**
@@ -352,7 +325,7 @@ To stop everything:
 1. **Terminal 1 (Backend):** Press `Ctrl+C`
 2. **Terminal 2 (Admin):** Press `Ctrl+C`
 3. **Terminal 3 (Student):** Press `Ctrl+C`
-4. **MongoDB:** Leave running (or stop with `sudo systemctl stop mongod`)
+4. **MongoDB Atlas:** Leave running (it's in the cloud, no need to stop)
 
 ---
 
@@ -372,8 +345,9 @@ To stop everything:
 ## Quick Commands Cheat Sheet
 
 ```bash
-# Start MongoDB (Linux)
-sudo systemctl start mongod
+# Verify MongoDB Atlas URL in .env
+cd backend
+cat .env | grep MONGODB_URL
 
 # Start Backend
 cd backend

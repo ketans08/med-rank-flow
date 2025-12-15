@@ -18,7 +18,9 @@ This project consists of **THREE SEPARATE APPLICATIONS**:
 
 - Python 3.9+
 - Node.js 18+
-- MongoDB (local or Atlas)
+- MongoDB Atlas account (cloud database) - **Recommended**
+  - Free tier available at https://www.mongodb.com/cloud/atlas
+  - Connection string already configured in `backend/.env`
 
 ### 1. Backend Setup
 
@@ -28,14 +30,11 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 
-# Create .env file from example
-cp .env.example .env
-# Edit .env with your MongoDB URL and JWT secret
+# Verify MongoDB Atlas URL is in .env
+cat .env | grep MONGODB_URL
+# Should show: mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
 
-# Generate JWT secret (recommended)
-openssl rand -hex 32
-
-# Seed initial users
+# Seed initial data (creates admin + 20-25 students with random tasks)
 python -m utils.seed
 
 # Run backend
@@ -44,10 +43,10 @@ uvicorn main:app --reload --port 8000
 
 Backend will run on `http://localhost:8000`
 
-**Important:** Update `.env` with:
-- `MONGODB_URL` - Your MongoDB connection string
-- `JWT_SECRET_KEY` - Generate with `openssl rand -hex 32`
-- `CORS_ORIGINS` - Comma-separated list of allowed origins
+**Note:** MongoDB Atlas URL is already configured in `backend/.env`. Make sure:
+- Your Atlas cluster is running (not paused)
+- IP whitelist includes `0.0.0.0/0` for development
+- Connection string is correct
 
 ### 2. Admin App Setup
 
@@ -92,11 +91,16 @@ Student app runs on `http://localhost:5174`
 All `.env` files are pre-configured for localhost development.
 
 **Quick Reference:**
-- Backend: `backend/.env` (already created)
-- Admin App: `med-rank-flow-admin/.env` (already created)
-- Student App: `med-rank-flow-student/.env` (already created)
+- **Backend**: `backend/.env` - MongoDB Atlas URL already configured ✅
+- **Admin App**: `med-rank-flow-admin/.env` - API URL: `http://localhost:8000`
+- **Student App**: `med-rank-flow-student/.env` - API URL: `http://localhost:8000`
 
-See [QUICK_START.md](./QUICK_START.md) for setup instructions.
+**MongoDB Atlas Setup:**
+- Connection string is in `backend/.env`
+- Make sure your Atlas cluster is running
+- IP whitelist should include `0.0.0.0/0` for development
+
+See [LOCALHOST_SETUP.md](./LOCALHOST_SETUP.md) for detailed step-by-step instructions.
 
 ## Features
 
@@ -202,10 +206,12 @@ See [ENV_SETUP.md](./ENV_SETUP.md) for comprehensive environment variable docume
 
 ### Running All Services
 
-1. Start MongoDB
-2. Start backend: `cd backend && uvicorn main:app --reload`
+1. ✅ MongoDB Atlas is already configured (no local setup needed)
+2. Start backend: `cd backend && source venv/bin/activate && uvicorn main:app --reload`
 3. Start admin app: `cd med-rank-flow-admin && npm run dev`
 4. Start student app: `cd med-rank-flow-student && npm run dev`
+
+See [LOCALHOST_SETUP.md](./LOCALHOST_SETUP.md) for complete instructions.
 
 ### Testing
 
