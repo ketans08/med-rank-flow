@@ -26,7 +26,7 @@ class TaskResponseSchema(BaseModel):
     id: str
     title: str
     description: str
-    patient: PatientInfoSchema
+    patient: dict  # Allow dict for flexibility
     assigned_student_id: str
     assigned_student_name: Optional[str] = None
     status: Literal["pending", "accepted", "rejected", "completed"]

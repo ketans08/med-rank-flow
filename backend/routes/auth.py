@@ -12,35 +12,53 @@ router = APIRouter(prefix="/auth", tags=["auth"])
 @router.post("/login", response_model=TokenResponse)
 async def login(credentials: LoginRequest):
     """Simple email/password authentication"""
-    user = await User.find_one(User.email == credentials.email)
-    
-    if not user or not verify_password(credentials.password, user.password_hash):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Incorrect email or password"
+    try:
+        user = await User.find_one(User.email == credentials.email)
+        
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+        
+        # Verify password
+        if not verify_password(credentials.password, user.password_hash):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Incorrect email or password"
+            )
+        
+        # Generate simple session token
+        token = generate_session_token()
+        expires_at = get_session_expiry()
+        
+        # Create session
+        session = Session(
+            user_id=str(user.id),
+            token=token,
+            expires_at=expires_at
         )
-    
-    # Generate simple session token
-    token = generate_session_token()
-    expires_at = get_session_expiry()
-    
-    # Create session
-    session = Session(
-        user_id=str(user.id),
-        token=token,
-        expires_at=expires_at
-    )
-    await session.insert()
-    
-    return TokenResponse(
-        access_token=token,
-        user={
-            "id": str(user.id),
-            "name": user.name,
-            "email": user.email,
-            "role": user.role
-        }
-    )
+        await session.insert()
+        
+        return TokenResponse(
+            access_token=token,
+            user={
+                "id": str(user.id),
+                "name": user.name,
+                "email": user.email,
+                "role": user.role
+            }
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        import traceback
+        print(f"Login error: {e}")
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Internal server error: {str(e)}"
+        )
 
 
 @router.post("/logout")

@@ -55,8 +55,8 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-medical-blue-light to-background p-4">
       <Card className="w-full max-w-md shadow-xl border-0" style={{ boxShadow: 'var(--shadow-medical)' }}>
         <CardHeader className="text-center space-y-2">
-          <div className="w-16 h-16 mx-auto rounded-full from-primary to-accent flex items-center justify-center mb-2">
-            <img className="text-white h-full w-full" src="/lg1.png" alt="Logo" />
+          <div className="w-20 h-20 mx-auto rounded-full bg-white flex items-center justify-center mb-2 p-2 shadow-md">
+            <img className="h-full w-full object-contain" src="/lg1.png" alt="AIIMS Raipur Logo" />
           </div>
           <CardTitle className="text-2xl font-bold">Med-Rank-Flow Student</CardTitle>
           <CardDescription>Medical Institute ERP - Student Portal</CardDescription>
@@ -97,10 +97,12 @@ const Login = () => {
           </form>
           
           <div className="mt-6 p-4 bg-muted rounded-lg">
-            <p className="text-sm font-medium mb-2">Demo Account:</p>
+            <p className="text-sm font-medium mb-2">Demo Accounts:</p>
             <div className="space-y-1 text-xs">
-              <p><strong>Student:</strong> john@student.edu</p>
+              <p><strong>Student 1:</strong> student01@student.edu</p>
+              <p><strong>Student 2:</strong> student02@student.edu</p>
               <p><strong>Password:</strong> student123</p>
+              <p className="text-xs text-muted-foreground mt-2">(student01 to student16)</p>
             </div>
           </div>
         </CardContent>

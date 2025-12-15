@@ -139,8 +139,8 @@ const AdminDashboard = () => {
       <header className="border-b bg-card shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 mx-auto rounded-full from-primary to-accent flex items-center justify-center">
-              <img className="text-white h-full w-full" src="/lg1.png" alt="Logo" />
+            <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center p-1.5 shadow-sm">
+              <img className="h-full w-full object-contain" src="/lg1.png" alt="AIIMS Raipur Logo" />
             </div>
             <div>
               <h1 className="text-xl font-bold">Med-Rank-Flow Admin</h1>

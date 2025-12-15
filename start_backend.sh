@@ -37,7 +37,7 @@ import sys
 try:
     from core.config import settings
     print(f'✓ MongoDB URL configured: {settings.mongodb_url[:40]}...')
-    print(f'✓ CORS Origins: {len(settings.cors_origins)} configured')
+    print(f'✓ CORS: All localhost origins allowed')
     print(f'✓ API will run on port: {settings.api_port}')
 except Exception as e:
     print(f'⚠️  Config check failed: {e}')

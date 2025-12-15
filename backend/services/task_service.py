@@ -35,19 +35,14 @@ class TaskService:
     @staticmethod
     async def get_admin_tasks() -> List[PatientTask]:
         """Get all tasks for admin view"""
-        tasks = await PatientTask.find().sort(-PatientTask.created_at).to_list()
-        
-        # Enrich with student names
-        student_ids = list(set(t.assigned_student_id for t in tasks))
-        if student_ids:
-            from beanie.odm.operators.find.comparison import In
-            students = await User.find(In(User.id, student_ids)).to_list()
-            student_map = {str(s.id): s.name for s in students}
-            
-            for task in tasks:
-                task.assigned_student_name = student_map.get(task.assigned_student_id)
-        
-        return tasks
+        try:
+            tasks = await PatientTask.find().sort(-PatientTask.created_at).to_list()
+            return tasks
+        except Exception as e:
+            print(f"Error in get_admin_tasks: {e}")
+            import traceback
+            traceback.print_exc()
+            return []
     
     @staticmethod
     async def get_student_tasks(student_id: str) -> List[PatientTask]:

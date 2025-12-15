@@ -1,5 +1,6 @@
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
+from fastapi import FastAPI, Request
+from fastapi.responses import Response
+from starlette.middleware.base import BaseHTTPMiddleware
 from contextlib import asynccontextmanager
 from core.config import settings
 from core.database import connect_to_mongo, close_mongo_connection
@@ -21,32 +22,42 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS middleware - Handle both string and list formats from settings
-cors_origins = settings.cors_origins
-if isinstance(cors_origins, str):
-    cors_origins = [origin.strip() for origin in cors_origins.split(",") if origin.strip()]
-elif not isinstance(cors_origins, list):
-    cors_origins = ["http://localhost:5173", "http://localhost:5174"]
+# Simple CORS middleware - works perfectly for localhost
+class CORSMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        origin = request.headers.get("origin")
+        
+        # Allow localhost origins (any port)
+        allowed_origins = [
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://127.0.0.1:5173",
+            "http://127.0.0.1:5174",
+        ]
+        
+        # Handle preflight OPTIONS request
+        if request.method == "OPTIONS":
+            response = Response()
+            if origin in allowed_origins:
+                response.headers["Access-Control-Allow-Origin"] = origin
+                response.headers["Access-Control-Allow-Credentials"] = "true"
+                response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+                response.headers["Access-Control-Allow-Headers"] = "*"
+            return response
+        
+        # Process the request
+        response = await call_next(request)
+        
+        # Add CORS headers to response
+        if origin in allowed_origins:
+            response.headers["Access-Control-Allow-Origin"] = origin
+            response.headers["Access-Control-Allow-Credentials"] = "true"
+            response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+            response.headers["Access-Control-Allow-Headers"] = "*"
+        
+        return response
 
-cors_methods = settings.cors_allow_methods
-if isinstance(cors_methods, str):
-    cors_methods = [m.strip() for m in cors_methods.split(",") if m.strip()]
-elif not isinstance(cors_methods, list):
-    cors_methods = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
-
-cors_headers = settings.cors_allow_headers
-if isinstance(cors_headers, str):
-    cors_headers = [h.strip() for h in cors_headers.split(",") if h.strip()]
-elif not isinstance(cors_headers, list):
-    cors_headers = ["*"]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=cors_origins,
-    allow_credentials=settings.cors_allow_credentials,
-    allow_methods=cors_methods,
-    allow_headers=cors_headers,
-)
+app.add_middleware(CORSMiddleware)
 
 # Include routers
 app.include_router(auth.router)

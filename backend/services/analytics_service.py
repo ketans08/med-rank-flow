@@ -11,6 +11,7 @@ class AnalyticsService:
     @staticmethod
     async def get_student_rankings() -> List[Dict[str, Any]]:
         """Get student rankings based on tasks completed, avg score, and acceptance rate"""
+        # First get completed tasks grouped by student
         pipeline = [
             {
                 "$match": {
@@ -25,29 +26,40 @@ class AnalyticsService:
                     "average_score": {"$avg": "$quality_score"},
                     "total_score": {"$sum": "$quality_score"}
                 }
-            },
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "_id",
-                    "foreignField": "_id",
-                    "as": "student"
-                }
-            },
-            {
-                "$unwind": "$student"
-            },
-            {
-                "$project": {
-                    "student_id": "$_id",
-                    "student_name": "$student.name",
-                    "tasks_completed": 1,
-                    "average_score": {"$round": ["$average_score", 2]}
-                }
             }
         ]
         
-        completed_tasks = await PatientTask.aggregate(pipeline).to_list()
+        task_groups = await PatientTask.aggregate(pipeline).to_list()
+        
+        # Get all student IDs and fetch students
+        from bson import ObjectId
+        student_ids = []
+        for item in task_groups:
+            student_id = item["_id"]
+            # Convert string to ObjectId if needed
+            try:
+                if isinstance(student_id, str):
+                    student_ids.append(ObjectId(student_id))
+                else:
+                    student_ids.append(student_id)
+            except:
+                student_ids.append(student_id)
+        
+        students = await User.find({"_id": {"$in": student_ids}}).to_list()
+        student_map = {str(s.id): s for s in students}
+        
+        # Build rankings with student names
+        completed_tasks = []
+        for item in task_groups:
+            student_id = item["_id"]
+            student = student_map.get(student_id)
+            if student:
+                completed_tasks.append({
+                    "student_id": student_id,
+                    "student_name": student.name,
+                    "tasks_completed": item["tasks_completed"],
+                    "average_score": round(item["average_score"], 2)
+                })
         
         # Get acceptance rates
         acceptance_pipeline = [
