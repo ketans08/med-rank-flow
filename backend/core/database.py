@@ -5,6 +5,7 @@ from models.user import User
 from models.patient_task import PatientTask
 from models.task_response import TaskResponse
 from models.analytics_log import AnalyticsLog
+from models.session import Session
 
 
 class Database:
@@ -19,7 +20,7 @@ async def connect_to_mongo():
     db.client = AsyncIOMotorClient(settings.mongodb_url)
     await init_beanie(
         database=db.client[settings.mongodb_db_name],
-        document_models=[User, PatientTask, TaskResponse, AnalyticsLog]
+        document_models=[User, PatientTask, TaskResponse, AnalyticsLog, Session]
     )
 
 

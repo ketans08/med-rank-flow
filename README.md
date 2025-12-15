@@ -84,8 +84,8 @@ npm run dev
 Student app runs on `http://localhost:5174`
 
 **Demo Credentials:**
-- Email: `john@student.edu`
-- Password: `student123`
+- Any student: `student01@student.edu` to `student25@student.edu` / `student123`
+- Example: `student05@student.edu` / `student123`
 
 ## Environment Configuration
 
@@ -101,7 +101,7 @@ See [QUICK_START.md](./QUICK_START.md) for setup instructions.
 ## Features
 
 ### Backend (FastAPI)
-- JWT Authentication
+- Simple Session-Based Authentication (email/password)
 - Role-Based Access Control (Admin/Student)
 - MongoDB with Beanie ODM
 - Immutable audit logging
@@ -125,7 +125,8 @@ See [QUICK_START.md](./QUICK_START.md) for setup instructions.
 ## API Endpoints
 
 ### Authentication
-- `POST /auth/login` - Login and get JWT token
+- `POST /auth/login` - Login with email/password (returns session token)
+- `POST /auth/logout` - Logout and delete session
 
 ### Tasks (Admin)
 - `POST /tasks` - Create new task
@@ -151,7 +152,9 @@ See [QUICK_START.md](./QUICK_START.md) for setup instructions.
 - ✅ Patient data integrity
 - ✅ No destructive operations
 - ✅ Full action traceability
-- ✅ JWT-based authentication
+- ✅ Simple session-based authentication (email/password)
+- ✅ Password hashing with bcrypt
+- ✅ Session tokens stored in database
 
 ## Project Structure
 

@@ -1,34 +1,42 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends, HTTPException, status, Header
+from typing import Optional
 from models.user import User
-from core.security import decode_access_token
-
-security = HTTPBearer()
+from models.session import Session
+from datetime import datetime
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    authorization: Optional[str] = Header(None)
 ) -> User:
-    """Get current authenticated user from JWT token"""
-    token = credentials.credentials
-    payload = decode_access_token(token)
-    
-    if payload is None:
+    """Get current authenticated user from session token"""
+    if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Missing or invalid authorization header",
         )
     
-    user_id: str = payload.get("sub")
-    if user_id is None:
+    token = authorization.replace("Bearer ", "")
+    
+    # Find session
+    session = await Session.find_one(Session.token == token)
+    
+    if not session:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
+            detail="Invalid session token",
         )
     
-    user = await User.get(user_id)
-    if user is None:
+    # Check if session expired
+    if session.expires_at < datetime.utcnow():
+        await session.delete()
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Session expired",
+        )
+    
+    # Get user
+    user = await User.get(session.user_id)
+    if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found",

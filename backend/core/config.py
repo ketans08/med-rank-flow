@@ -18,10 +18,8 @@ class Settings(BaseSettings):
     mongodb_max_pool_size: int = 100
     mongodb_min_pool_size: int = 10
     
-    # JWT Authentication
-    jwt_secret_key: str = "your-secret-key-change-in-production"
-    jwt_algorithm: str = "HS256"
-    jwt_access_token_expire_minutes: int = 1440  # 24 hours
+    # Session Authentication (Simple token-based, no JWT)
+    session_expiry_hours: int = 24  # Session expires after 24 hours
     
     # CORS
     cors_origins: List[str] = ["http://localhost:5173", "http://localhost:5174"]
