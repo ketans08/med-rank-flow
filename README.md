@@ -4,7 +4,11 @@
 
 A comprehensive web application for managing patient-linked academic tasks, tracking student performance, and generating analytics-based rankings for medical institutes.
 
-![AIIMS Raipur Logo](./med-rank-flow-admin/public/lg1.png)
+## 🌐 Live Applications
+
+- **Backend API:** https://med-rank-flow.onrender.com
+- **Admin Portal:** https://med-rank-flow-4kuf.vercel.app/
+- **Student Portal:** https://med-rank-flow-r4iq.vercel.app/
 
 ## 🚀 Quick Start
 
@@ -75,12 +79,14 @@ Alternatively, use the provided startup scripts:
 ### Admin Portal
 - **Email:** `admin@institute.edu`
 - **Password:** `admin123`
-- **URL:** http://localhost:5173
+- **Live URL:** https://med-rank-flow-4kuf.vercel.app/
+- **Local URL:** http://localhost:5173
 
 ### Student Portal
 - **Email:** `student01@student.edu` to `student16@student.edu`
 - **Password:** `student123`
-- **URL:** http://localhost:5174
+- **Live URL:** https://med-rank-flow-r4iq.vercel.app/
+- **Local URL:** http://localhost:5174
 
 Example: `student01@student.edu` / `student123`
 
@@ -93,12 +99,14 @@ This project consists of **three separate applications**:
    - MongoDB database with Beanie ODM
    - Analytics and ranking calculations
    - Port: `8000`
+   - **Live:** https://med-rank-flow.onrender.com
 
 2. **Admin Web App** (React + TypeScript)
    - Task management and assignment
    - Student performance analytics
    - Rankings and scoring
    - Port: `5173`
+   - **Live:** https://med-rank-flow-4kuf.vercel.app/
 
 3. **Student Web App** (React + TypeScript)
    - View assigned tasks
@@ -106,6 +114,7 @@ This project consists of **three separate applications**:
    - Complete tasks
    - Personal analytics dashboard
    - Port: `5174`
+   - **Live:** https://med-rank-flow-r4iq.vercel.app/
 
 ## ✨ Features
 
@@ -131,7 +140,7 @@ This project consists of **three separate applications**:
 - ✅ Real-time analytics and rankings
 - ✅ Patient data management
 - ✅ Immutable audit logging
-- ✅ CORS configured for localhost development
+- ✅ CORS configured for production deployments
 
 ## 📁 Project Structure
 
@@ -139,35 +148,17 @@ This project consists of **three separate applications**:
 med-rank-flow/
 ├── backend/                    # FastAPI backend
 │   ├── core/                  # Core configuration
-│   │   ├── config.py         # Settings and environment variables
-│   │   ├── database.py       # MongoDB connection
-│   │   ├── dependencies.py   # FastAPI dependencies
-│   │   └── security.py       # Authentication & password hashing
 │   ├── models/               # MongoDB models (Beanie)
-│   │   ├── user.py          # User model
-│   │   ├── patient_task.py  # Task model
-│   │   ├── session.py       # Session model
-│   │   └── analytics_log.py # Analytics logging
 │   ├── routes/               # API routes
-│   │   ├── auth.py          # Authentication endpoints
-│   │   ├── tasks.py         # Task management endpoints
-│   │   ├── analytics.py     # Analytics endpoints
-│   │   └── users.py         # User management endpoints
 │   ├── schemas/              # Pydantic schemas
 │   ├── services/             # Business logic
-│   │   ├── task_service.py  # Task operations
-│   │   └── analytics_service.py # Analytics calculations
 │   ├── utils/                # Utilities
-│   │   └── seed.py          # Database seeding script
 │   ├── main.py               # FastAPI application
 │   └── requirements.txt      # Python dependencies
 │
 ├── med-rank-flow-admin/       # Admin React app
 │   ├── src/
 │   │   ├── pages/           # Admin pages
-│   │   │   ├── Login.tsx
-│   │   │   ├── AdminDashboard.tsx
-│   │   │   └── AdminAnalytics.tsx
 │   │   ├── services/        # API services
 │   │   ├── contexts/        # React contexts
 │   │   └── components/      # UI components
@@ -176,9 +167,6 @@ med-rank-flow/
 ├── med-rank-flow-student/     # Student React app
 │   ├── src/
 │   │   ├── pages/           # Student pages
-│   │   │   ├── Login.tsx
-│   │   │   ├── StudentDashboard.tsx
-│   │   │   └── StudentAnalytics.tsx
 │   │   ├── services/        # API services
 │   │   ├── contexts/        # React contexts
 │   │   └── components/      # UI components
@@ -199,16 +187,19 @@ med-rank-flow/
 MONGODB_URL=mongodb://localhost:27017/med_rank_flow
 # Or MongoDB Atlas:
 # MONGODB_URL=mongodb+srv://username:password@cluster.mongodb.net/med_rank_flow
+CORS_ORIGINS=https://med-rank-flow-4kuf.vercel.app,https://med-rank-flow-r4iq.vercel.app
 ```
 
 #### Admin App (`med-rank-flow-admin/.env`)
 ```env
 VITE_API_URL=http://localhost:8000
+# Production: VITE_API_URL=https://med-rank-flow.onrender.com
 ```
 
 #### Student App (`med-rank-flow-student/.env`)
 ```env
 VITE_API_URL=http://localhost:8000
+# Production: VITE_API_URL=https://med-rank-flow.onrender.com
 ```
 
 ## 📡 API Endpoints
@@ -236,6 +227,8 @@ VITE_API_URL=http://localhost:8000
 
 ### Users
 - `GET /users/students` - Get all students (Admin)
+
+**API Documentation:** https://med-rank-flow.onrender.com/docs
 
 ## 🗄️ Database
 
@@ -283,13 +276,14 @@ All three services support hot-reload:
 Once the backend is running, visit:
 - **Swagger UI:** http://localhost:8000/docs
 - **ReDoc:** http://localhost:8000/redoc
+- **Production:** https://med-rank-flow.onrender.com/docs
 
 ## 🔒 Security
 
 - ✅ Password hashing with bcrypt (12 rounds)
 - ✅ Session-based authentication
 - ✅ Role-based access control (RBAC)
-- ✅ CORS configured for localhost
+- ✅ CORS configured for production
 - ✅ Input validation with Pydantic
 - ✅ Immutable audit logging
 
@@ -331,6 +325,7 @@ lsof -ti:8000 | xargs kill -9
 - Ensure backend is running on port 8000
 - Check CORS configuration in `backend/main.py`
 - Verify `VITE_API_URL` in frontend `.env` files
+- For production, ensure `CORS_ORIGINS` includes your Vercel URLs
 
 **Port Conflicts:**
 ```bash
@@ -364,20 +359,16 @@ chmod +x start_*.sh
 
 ## 🚀 Production Deployment
 
-### Backend
-1. Set production environment variables
-2. Use production ASGI server (Gunicorn + Uvicorn workers)
-3. Configure reverse proxy (Nginx) with SSL
-4. Set up MongoDB Atlas with proper security
+### Backend (Render)
+- Deployed at: https://med-rank-flow.onrender.com
+- Environment variables configured in Render dashboard
+- Auto-deploys on git push
 
-### Frontend
-1. Build production bundles:
-   ```bash
-   cd med-rank-flow-admin && npm run build
-   cd med-rank-flow-student && npm run build
-   ```
-2. Serve with Nginx or similar static file server
-3. Configure API URL for production backend
+### Frontend (Vercel)
+- **Admin:** https://med-rank-flow-4kuf.vercel.app/
+- **Student:** https://med-rank-flow-r4iq.vercel.app/
+- Auto-deploys on git push
+- Environment variables configured in Vercel dashboard
 
 ## 📄 License
 
