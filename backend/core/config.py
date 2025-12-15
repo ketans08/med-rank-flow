@@ -1,5 +1,5 @@
 from pydantic_settings import BaseSettings
-from typing import List
+from typing import List, Union
 import os
 
 
@@ -21,11 +21,11 @@ class Settings(BaseSettings):
     # Session Authentication (Simple token-based, no JWT)
     session_expiry_hours: int = 24  # Session expires after 24 hours
     
-    # CORS
-    cors_origins: List[str] = ["http://localhost:5173", "http://localhost:5174"]
+    # CORS (can be comma-separated string in .env)
+    cors_origins: Union[str, List[str]] = "http://localhost:5173,http://localhost:5174"
     cors_allow_credentials: bool = True
-    cors_allow_methods: List[str] = ["GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"]
-    cors_allow_headers: List[str] = ["*"]
+    cors_allow_methods: Union[str, List[str]] = "GET,POST,PUT,DELETE,OPTIONS,PATCH"
+    cors_allow_headers: Union[str, List[str]] = "*"
     
     # Security
     bcrypt_rounds: int = 12
@@ -44,11 +44,19 @@ class Settings(BaseSettings):
         case_sensitive = False
 
     def __init__(self, **kwargs):
+        # Pre-process list fields from environment (can be comma-separated strings)
+        if 'cors_origins' in kwargs and isinstance(kwargs['cors_origins'], str):
+            kwargs['cors_origins'] = [origin.strip() for origin in kwargs['cors_origins'].split(",") if origin.strip()]
+        if 'cors_allow_methods' in kwargs and isinstance(kwargs['cors_allow_methods'], str):
+            kwargs['cors_allow_methods'] = [m.strip() for m in kwargs['cors_allow_methods'].split(",") if m.strip()]
+        if 'cors_allow_headers' in kwargs and isinstance(kwargs['cors_allow_headers'], str):
+            kwargs['cors_allow_headers'] = [h.strip() for h in kwargs['cors_allow_headers'].split(",") if h.strip()]
+        
         super().__init__(**kwargs)
-        # Parse CORS origins from comma-separated string if provided as string
+        
+        # Post-init parsing (in case values come from .env file after super())
         if isinstance(self.cors_origins, str):
             self.cors_origins = [origin.strip() for origin in self.cors_origins.split(",") if origin.strip()]
-        # Parse CORS methods and headers if strings
         if isinstance(self.cors_allow_methods, str):
             self.cors_allow_methods = [m.strip() for m in self.cors_allow_methods.split(",") if m.strip()]
         if isinstance(self.cors_allow_headers, str):
