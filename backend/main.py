@@ -2,6 +2,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import Response
 from starlette.middleware.base import BaseHTTPMiddleware
 from contextlib import asynccontextmanager
+import os
 from core.config import settings
 from core.database import connect_to_mongo, close_mongo_connection
 from routes import auth, tasks, analytics, users
@@ -22,18 +23,24 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Simple CORS middleware - works perfectly for localhost
+# CORS middleware - configurable for production
 class CORSMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         origin = request.headers.get("origin")
         
-        # Allow localhost origins (any port)
-        allowed_origins = [
-            "http://localhost:5173",
-            "http://localhost:5174",
-            "http://127.0.0.1:5173",
-            "http://127.0.0.1:5174",
-        ]
+        # Get allowed origins from environment or use defaults
+        cors_origins = os.getenv("CORS_ORIGINS", "").split(",")
+        if not cors_origins or cors_origins == [""]:
+            # Default to localhost for development
+            allowed_origins = [
+                "http://localhost:5173",
+                "http://localhost:5174",
+                "http://127.0.0.1:5173",
+                "http://127.0.0.1:5174",
+            ]
+        else:
+            # Use environment variable origins (comma-separated)
+            allowed_origins = [o.strip() for o in cors_origins if o.strip()]
         
         # Handle preflight OPTIONS request
         if request.method == "OPTIONS":

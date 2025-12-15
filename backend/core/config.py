@@ -9,7 +9,7 @@ class Settings(BaseSettings):
     environment: str = "development"  # development, staging, production
     debug: bool = False
     api_host: str = "0.0.0.0"
-    api_port: int = 8000
+    api_port: int = int(os.getenv("PORT", "8000"))  # Render provides PORT env var
     
     # MongoDB
     mongodb_url: str = "mongodb://localhost:27017/med_rank_flow"
